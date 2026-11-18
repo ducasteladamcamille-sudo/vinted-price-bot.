@@ -1,0 +1,26 @@
+
+import discord
+from discord import app_commands
+import os
+
+TOKEN = os.environ["DISCORD_TOKEN"]
+
+class MonBot(discord.Client):
+    def __init__(self):
+        super().__init__(intents=discord.Intents.default())
+        self.tree = app_commands.CommandTree(self)
+
+    async def setup_hook(self):
+        await self.tree.sync()
+
+bot = MonBot()
+
+@bot.tree.command(name="prix", description="Trouver le prix moyen d'un produit sur Vinted")
+@app_commands.describe(produit="Nom du produit à analyser")
+async def prix(interaction: discord.Interaction, produit: str):
+    await interaction.response.send_message(
+        f"🔎 Je recherche le prix de **{produit}** sur Vinted...\n"
+        "L'analyse des annonces sera bientôt disponible."
+    )
+
+bot.run(TOKEN)
